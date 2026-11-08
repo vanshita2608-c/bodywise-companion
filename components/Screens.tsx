@@ -213,7 +213,7 @@ export function Progress({ journey, onCheckin }: { journey: Journey; onCheckin: 
                 </span>
               </div>
               <div className="bar">
-                <i style={{ width: `${(n / 4) * 100}%`, background: n < b ? "linear-gradient(90deg,var(--good),#5EEAD4)" : color }} />
+                <i style={{ width: `${(n / 4) * 100}%`, background: n < b ? "var(--good)" : color }} />
               </div>
             </div>
           );

@@ -41,12 +41,12 @@ export default function ProgressChart({ journey }: { journey: Journey }) {
     <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label="Improvement over weeks compared with typical range">
       <defs>
         <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="#FF6B8B" />
-          <stop offset="100%" stopColor="#8B5CF6" />
+          <stop offset="0%" style={{ stopColor: "var(--brand)" }} />
+          <stop offset="100%" style={{ stopColor: "var(--brand-2)" }} />
         </linearGradient>
         <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#F0507A" stopOpacity={0.28} />
-          <stop offset="100%" stopColor="#8B5CF6" stopOpacity={0} />
+          <stop offset="0%" style={{ stopColor: "var(--brand)", stopOpacity: 0.25 }} />
+          <stop offset="100%" style={{ stopColor: "var(--brand-2)", stopOpacity: 0 }} />
         </linearGradient>
       </defs>
       {[0, 0.25, 0.5, 0.75, 1].map((g) => (

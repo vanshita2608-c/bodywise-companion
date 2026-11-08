@@ -20,8 +20,8 @@ export function ProgressRing({ value, label, size = 120 }: { value: number | nul
       <svg width={size} height={size} aria-hidden>
         <defs>
           <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#FF6B8B" />
-            <stop offset="100%" stopColor="#8B5CF6" />
+            <stop offset="0%" style={{ stopColor: "var(--brand)" }} />
+            <stop offset="100%" style={{ stopColor: "var(--brand-2)" }} />
           </linearGradient>
         </defs>
         <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--surface-2)" strokeWidth={stroke} />
