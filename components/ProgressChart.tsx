@@ -1,6 +1,7 @@
 "use client";
 
 import { expectedAt, improvement, productOf, weekNo } from "@/lib/logic";
+import { forecast, projectedAt } from "@/lib/predict";
 import type { Journey } from "@/lib/types";
 
 const W = 320, H = 180, PAD_L = 34, PAD_R = 10, PAD_T = 10, PAD_B = 26;
@@ -25,6 +26,13 @@ export default function ProgressChart({ journey }: { journey: Journey }) {
   const line = series.map((s, i) => `${i ? "L" : "M"}${x(s.week)},${y(s.v)}`).join(" ");
   const lastPt = series[series.length - 1];
   const area = `${line} L${x(lastPt.week)},${y(0)} L${x(0)},${y(0)} Z`;
+  const fc = forecast(journey);
+  let projection = "";
+  if (fc && lastPt.week < p.judgeWeek) {
+    const pts2: string[] = [`${x(lastPt.week)},${y(lastPt.v)}`];
+    for (let wk = lastPt.week + 0.5; wk <= p.judgeWeek + 1e-9; wk += 0.5) pts2.push(`${x(wk)},${y(projectedAt(journey, wk, fc, lastPt.week, lastPt.v))}`);
+    projection = `M${pts2.join(" L")}`;
+  }
   const step = maxW > 8 ? 2 : 1;
   const ticks: number[] = [];
   for (let i = 0; i <= maxW; i += step) ticks.push(i);
@@ -55,6 +63,9 @@ export default function ProgressChart({ journey }: { journey: Journey }) {
         judge
       </text>
       {series.length > 1 && <path className="area" d={area} fill="url(#areaGrad)" />}
+      {projection && (
+        <path className="area" d={projection} fill="none" stroke="var(--brand-2)" strokeWidth={2} strokeDasharray="4 4" strokeLinecap="round" />
+      )}
       <path
         className="line"
         d={line}

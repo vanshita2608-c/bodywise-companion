@@ -15,6 +15,7 @@ import {
 } from "@/lib/logic";
 import { SCALE } from "@/lib/products";
 import type { Journey } from "@/lib/types";
+import { CoachCard, ForecastCard, PhotoCheck } from "./AI";
 import { ConsistencyHeatmap, ProgressRing } from "./Charts";
 import ProgressChart from "./ProgressChart";
 import { Timeline, VerdictCard } from "./ui";
@@ -141,6 +142,8 @@ export function Progress({ journey, onCheckin }: { journey: Journey; onCheckin: 
 
       <VerdictCard v={verdict(journey)} />
 
+      <CoachCard journey={journey} />
+
       <div className="stats">
         <div className="stat ring-card">
           <ProgressRing value={imp === null ? null : Math.max(0, imp) / 100} label="Improvement vs start" />
@@ -172,12 +175,20 @@ export function Progress({ journey, onCheckin }: { journey: Journey; onCheckin: 
             <i style={{ background: "var(--warn)", borderRadius: "50%" }} />
             Something else changed
           </span>
+          <span>
+            <i style={{ background: "repeating-linear-gradient(90deg,var(--brand-2) 0 3px,transparent 3px 5px)" }} />
+            Forecast
+          </span>
         </div>
         <p className="tiny muted">
           Improvement in your main concerns compared with your week-0 baseline. Dashed line = week {p.judgeWeek}, the
           fair point to judge.
         </p>
       </div>
+
+      <ForecastCard journey={journey} />
+
+      <PhotoCheck journey={journey} />
 
       <div className="card stack">
         <div className="row between">

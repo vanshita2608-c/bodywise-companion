@@ -48,6 +48,12 @@ export default function Landing({ onStart, onDemo }: { onStart: () => void; onDe
             <span>See if it&apos;s working, with a 30-sec check-in</span>
           </div>
         </div>
+        <div className="ai-row">
+          <span>✦ AI progress coach</span>
+          <span>💬 Ask anything</span>
+          <span>📷 Photo check</span>
+          <span>📈 Results forecast</span>
+        </div>
         <div className="stack">
           <button className="btn" onClick={onStart}>
             Start my tracker

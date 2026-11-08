@@ -38,4 +38,4 @@ export type Journey = {
   demo?: boolean;
 };
 
-export type Tab = "today" | "progress" | "guide";
+export type Tab = "today" | "progress" | "ask" | "guide";

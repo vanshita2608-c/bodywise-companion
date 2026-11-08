@@ -10,8 +10,14 @@ Built for the Mosaic Fellowship Builder Challenge (Part 2).
 3. **See if it's working:** a baseline rating, a 1-tap daily log, and a 30-second weekly check-in. Progress is charted against a typical range and turned into a plain verdict: *too early / working / slower than typical (and why) / mixed signal / not the right fit*.
 4. **Attribution:** customers log other changes (new shampoo, diet, stress) so improvements aren't confounded.
 
+**AI / ML features**
+- **AI progress coach:** Claude reads your check-ins and explains your progress in plain words, with one thing to do this week.
+- **Ask anything:** a private chat for "silly" questions people hesitate to ask customer care, grounded in the product's facts and your progress.
+- **Photo progress check:** add a weekly photo; Claude compares your latest photo with week 0 (photos stay on the device until you tap compare).
+- **Results forecast (ML):** a ridge-regression model fitted to your check-ins predicts your improvement range and chance of a meaningful result by the judge week.
+
 ## Tech
-Next.js 15 (App Router) + TypeScript + React 19, exported as a static site. No backend; data stays in the browser (localStorage). No customer personal data is used in the app.
+Next.js 15 (App Router) + TypeScript + React 19. AI via the Anthropic Claude API (`claude-opus-5-5`) in server routes (`app/api/coach`, `ask`, `photo`); the key never reaches the browser. Tracking data and photos stay in the browser (localStorage); only anonymous ratings, and photos when you tap compare, are sent to the AI. No customer personal data is used in the app.
 
 ```
 app/            layout, page, global styles
@@ -19,16 +25,20 @@ components/     Landing, Onboarding, Today / Progress / Guide screens, CheckinSh
 lib/products.ts usage steps, key step, timelines per product
 lib/logic.ts    progress maths + the "is it working?" verdict
 lib/storage.ts  local storage + 5-week demo journey
+lib/predict.ts  ML forecast (ridge regression + uncertainty)
+lib/ai.ts       server-side Claude client + safety rules
+app/api/*       AI routes: coach, ask, photo
 ```
 
 ## Run locally
 ```bash
 npm install
-npm run dev      # open http://localhost:3000
+cp .env.example .env.local   # paste your ANTHROPIC_API_KEY
+npm run dev                  # open http://localhost:3000
 ```
 
 ## Deploy
-Import the GitHub repo on https://vercel.com/new and click Deploy. Every `git push` redeploys automatically.
+Import the GitHub repo on https://vercel.com/new, add the environment variable `ANTHROPIC_API_KEY`, and click Deploy. Every `git push` redeploys automatically.
 
 Tip for reviewers: tap **"See a 5-week example"** on the home screen to see a filled-in journey instantly.
 

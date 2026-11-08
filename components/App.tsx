@@ -7,7 +7,9 @@ import type { Journey, Scores, Tab } from "@/lib/types";
 import CheckinSheet from "./CheckinSheet";
 import Landing from "./Landing";
 import Onboarding from "./Onboarding";
+import { AskChat } from "./AI";
 import { Guide, Progress, Today } from "./Screens";
+import { clearPhotos } from "@/lib/photos";
 import { Header } from "./ui";
 
 type Mode = "loading" | "landing" | "onboarding" | "app";
@@ -15,6 +17,7 @@ type Mode = "loading" | "landing" | "onboarding" | "app";
 const TABS: { id: Tab; label: string; icon: React.ReactNode }[] = [
   { id: "today", label: "Today", icon: <><circle cx="12" cy="12" r="9" /><path d="M8 12.5l2.5 2.5L16 9.5" /></> },
   { id: "progress", label: "Is it working?", icon: <path d="M4 19h16M6 15l4-4 3 3 5-6" /> },
+  { id: "ask", label: "Ask AI", icon: <><path d="M4 5h16v11H9l-5 4z" /><path d="M9 10h.01M12 10h.01M15 10h.01" /></> },
   { id: "guide", label: "How to use", icon: <><path d="M5 4h10l4 4v12H5z" /><path d="M9 12h6M9 16h6" /></> },
 ];
 
@@ -44,6 +47,7 @@ export default function App() {
   const reset = () => {
     if (journey && !journey.demo && !confirm("Start over? This clears your tracking on this device.")) return;
     update(null);
+    clearPhotos();
     setTab("today");
     setMode("landing");
   };
@@ -124,6 +128,7 @@ export default function App() {
           />
         )}
         {tab === "progress" && <Progress journey={journey} onCheckin={() => setCheckinOpen(true)} />}
+        {tab === "ask" && <AskChat journey={journey} />}
         {tab === "guide" && <Guide journey={journey} />}
       </div>
 
