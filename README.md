@@ -17,7 +17,7 @@ Built for the Mosaic Fellowship Builder Challenge (Part 2).
 - **Results forecast (ML):** a ridge-regression model fitted to your check-ins predicts your improvement range and chance of a meaningful result by the judge week.
 
 ## Tech
-Next.js 15 (App Router) + TypeScript + React 19. AI via the Anthropic Claude API (`claude-opus-5-5`) in server routes (`app/api/coach`, `ask`, `photo`); the key never reaches the browser. Tracking data and photos stay in the browser (localStorage); only anonymous ratings, and photos when you tap compare, are sent to the AI. No customer personal data is used in the app.
+Next.js 15 (App Router) + TypeScript + React 19. AI via Google Gemini (free tier) or Anthropic Claude, chosen by env var, in server routes (`app/api/coach`, `ask`, `photo`); the key never reaches the browser. Tracking data and photos stay in the browser (localStorage); only anonymous ratings, and photos when you tap compare, are sent to the AI. No customer personal data is used in the app.
 
 ```
 app/            layout, page, global styles
@@ -33,12 +33,12 @@ app/api/*       AI routes: coach, ask, photo
 ## Run locally
 ```bash
 npm install
-cp .env.example .env.local   # paste your ANTHROPIC_API_KEY
+cp .env.example .env.local   # paste your GEMINI_API_KEY (free)
 npm run dev                  # open http://localhost:3000
 ```
 
 ## Deploy
-Import the GitHub repo on https://vercel.com/new, add the environment variable `ANTHROPIC_API_KEY`, and click Deploy. Every `git push` redeploys automatically.
+Import the GitHub repo on https://vercel.com/new, add the environment variable `GEMINI_API_KEY` (free, from aistudio.google.com) or `ANTHROPIC_API_KEY`, and click Deploy. Every `git push` redeploys automatically.
 
 Tip for reviewers: tap **"See a 5-week example"** on the home screen to see a filled-in journey instantly.
 

@@ -1,4 +1,4 @@
-import { askClaude, json } from "@/lib/ai";
+import { askAI, json } from "@/lib/ai";
 import { productFacts } from "@/lib/context";
 import { PRODUCTS } from "@/lib/products";
 import type { ProductId } from "@/lib/types";
@@ -13,7 +13,7 @@ export async function POST(req: Request) {
   const summaryText = JSON.stringify(summary);
   if (summaryText.length > 8000) return json({ error: "Progress data too large." }, 413);
 
-  const result = await askClaude({
+  const result = await askAI({
     system: `You are the user's progress coach. Read their tracking data and explain, in under 120 words:
 1. What's actually happening (cite their numbers: improvement %, consistency, key step).
 2. The most likely reason it's going this way (e.g. skipping the key step, too early, another change confounding it).
@@ -21,7 +21,7 @@ export async function POST(req: Request) {
 Format: a one-line headline, then 2–3 "- " bullets. Be honest: don't promise results; if it's too early, say so.
 
 ${productFacts(productId)}`,
-    messages: [{ role: "user", content: `My tracking data:\n${summaryText}` }],
+    messages: [{ role: "user", parts: [{ text: `My tracking data:\n${summaryText}` }] }],
   });
 
   return result.ok ? json({ text: result.text }) : json({ error: result.error }, result.status);

@@ -1,5 +1,4 @@
-import type Anthropic from "@anthropic-ai/sdk";
-import { askClaude, json } from "@/lib/ai";
+import { askAI, json, type Message } from "@/lib/ai";
 import { productFacts } from "@/lib/context";
 import { PRODUCTS } from "@/lib/products";
 import type { ProductId } from "@/lib/types";
@@ -25,9 +24,9 @@ export async function POST(req: Request) {
   if (!turns.length || turns[turns.length - 1].role !== "user") return json({ error: "Ask a question first." }, 400);
 
   const summary = body?.summary ? JSON.stringify(body.summary).slice(0, 6000) : "not available";
-  const messages: Anthropic.Beta.BetaMessageParam[] = turns.map((t) => ({ role: t.role, content: t.text }));
+  const messages: Message[] = turns.map((t) => ({ role: t.role, parts: [{ text: t.text }] }));
 
-  const result = await askClaude({
+  const result = await askAI({
     system: `Answer the user's questions about their product. No question is silly; be kind and never make them feel judged.
 Keep answers under 90 words unless they ask for detail. Use their progress data when it helps.
 If the question is about a different product or brand, answer generally and suggest checking that product's label.
