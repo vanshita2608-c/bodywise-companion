@@ -15,6 +15,7 @@ import {
 } from "@/lib/logic";
 import { SCALE } from "@/lib/products";
 import type { Journey } from "@/lib/types";
+import { ConsistencyHeatmap, ProgressRing } from "./Charts";
 import ProgressChart from "./ProgressChart";
 import { Timeline, VerdictCard } from "./ui";
 
@@ -54,7 +55,7 @@ export function Today({
   });
 
   return (
-    <div className="stack-lg">
+    <div className="stack-lg screen">
       <div className="stack">
         <span className="chip">
           {p.icon} {p.short} · Day {d + 1} · Week {w + 1}
@@ -66,9 +67,7 @@ export function Today({
         <div className="row between">
           <h3>Did you use it today?</h3>
           {log.used && (
-            <span className="chip" style={{ background: "var(--good-soft)", color: "var(--good)" }}>
-              Done ✓
-            </span>
+            <span className="chip done-chip">Done ✓</span>
           )}
         </div>
         <div className="toggles">
@@ -132,7 +131,7 @@ export function Progress({ journey, onCheckin }: { journey: Journey; onCheckin: 
   const pct = (v: number | null) => (v === null ? "–" : `${Math.round(v * 100)}%`);
 
   return (
-    <div className="stack-lg">
+    <div className="stack-lg screen">
       <div className="stack">
         <span className="chip">
           {p.icon} {p.short}
@@ -143,9 +142,9 @@ export function Progress({ journey, onCheckin }: { journey: Journey; onCheckin: 
       <VerdictCard v={verdict(journey)} />
 
       <div className="stats">
-        <div className="stat">
-          <b>{imp === null ? "–" : `${imp}%`}</b>
-          <span>better vs start</span>
+        <div className="stat ring-card">
+          <ProgressRing value={imp === null ? null : Math.max(0, imp) / 100} label="Improvement vs start" />
+          <span>better than week 0</span>
         </div>
         <div className="stat">
           <b>{pct(adh)}</b>
@@ -181,6 +180,14 @@ export function Progress({ journey, onCheckin }: { journey: Journey; onCheckin: 
       </div>
 
       <div className="card stack">
+        <div className="row between">
+          <h3>Your consistency</h3>
+          <span className="small muted">{pct(adh)} last 14 days</span>
+        </div>
+        <ConsistencyHeatmap journey={journey} />
+      </div>
+
+      <div className="card stack">
         <h3>By concern</h3>
         {p.markers.map((m) => {
           const b = journey.baseline[m.id] ?? 0;
@@ -194,8 +201,8 @@ export function Progress({ journey, onCheckin }: { journey: Journey; onCheckin: 
                   {SCALE[b]} → <b style={{ color: n === b ? "var(--ink)" : color }}>{SCALE[n]}</b>
                 </span>
               </div>
-              <div className="progress" style={{ height: 6, marginTop: 6 }}>
-                <i style={{ width: `${(n / 4) * 100}%`, background: color }} />
+              <div className="bar">
+                <i style={{ width: `${(n / 4) * 100}%`, background: n < b ? "linear-gradient(90deg,var(--good),#5EEAD4)" : color }} />
               </div>
             </div>
           );
@@ -228,7 +235,7 @@ export function Progress({ journey, onCheckin }: { journey: Journey; onCheckin: 
 export function Guide({ journey }: { journey: Journey }) {
   const p = productOf(journey);
   return (
-    <div className="stack-lg">
+    <div className="stack-lg screen">
       <div className="stack">
         <span className="chip">
           {p.icon} {p.short}

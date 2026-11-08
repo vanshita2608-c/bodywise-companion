@@ -1,5 +1,6 @@
 "use client";
 
+import { ProgressRing } from "./Charts";
 import { Header } from "./ui";
 
 /** Quotes are from our real customer conversations (Part 1). */
@@ -13,7 +14,7 @@ export default function Landing({ onStart, onDemo }: { onStart: () => void; onDe
   return (
     <>
       <Header inApp={false} />
-      <div className="stack-lg">
+      <div className="stack-lg screen">
         <div className="hero stack">
           <h1>
             Know if your product is <em>actually working</em>.
@@ -23,17 +24,27 @@ export default function Landing({ onStart, onDemo }: { onStart: () => void; onDe
             guesswork.
           </p>
         </div>
+        <div className="hero-visual" aria-hidden>
+          <ProgressRing value={0.5} size={92} />
+          <div className="stack" style={{ marginTop: 0 }}>
+            <span className="vlabel" style={{ color: "var(--good)" }}>
+              ✓ It&apos;s working
+            </span>
+            <p style={{ fontWeight: 700 }}>Hair fall down 50% by week 5</p>
+            <p className="small muted">Ahead of the typical range. Full picture at week 12.</p>
+          </div>
+        </div>
         <div className="pillars">
           <div className="pillar">
-            <b>①</b>
+            <b>✓</b>
             <span>Use it right: the step most people skip</span>
           </div>
           <div className="pillar">
-            <b>②</b>
+            <b>⏱</b>
             <span>Know what to expect, week by week</span>
           </div>
           <div className="pillar">
-            <b>③</b>
+            <b>↗</b>
             <span>See if it&apos;s working, with a 30-sec check-in</span>
           </div>
         </div>

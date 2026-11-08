@@ -8,7 +8,7 @@ export function Header({ onReset, inApp }: { onReset?: () => void; inApp: boolea
   return (
     <div className="top">
       <div className="logo">
-        <span className="dot" />
+        <span className="dot">✦</span>
         Is It Working?
       </div>
       {inApp ? (
@@ -77,6 +77,8 @@ export function Timeline({ product, week }: { product: Product; week: number }) 
   );
 }
 
+const ICON: Record<Verdict["tone"], string> = { neutral: "⏳", good: "✓", warn: "!", bad: "↺" };
+
 export function VerdictCard({ v, children }: { v: Verdict; children?: React.ReactNode }) {
   let body: React.ReactNode = v.body;
   if (v.emphasis && v.body.includes(v.emphasis)) {
@@ -91,8 +93,15 @@ export function VerdictCard({ v, children }: { v: Verdict; children?: React.Reac
   }
   return (
     <div className={`verdict ${v.tone} stack`} aria-live="polite">
-      <span className="vlabel">{v.label}</span>
-      <h3>{v.title}</h3>
+      <div className="vhead">
+        <span className="vbadge" aria-hidden>
+          {ICON[v.tone]}
+        </span>
+        <div>
+          <span className="vlabel">{v.label}</span>
+          <h3>{v.title}</h3>
+        </div>
+      </div>
       <p className="small">{body}</p>
       {children}
     </div>

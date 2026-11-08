@@ -34,7 +34,7 @@ export default function Onboarding({ onDone, onExit }: { onDone: (j: Journey) =>
   return (
     <>
       <Header inApp={false} />
-      <div className="stack-lg">
+      <div className="stack-lg screen" key={step}>
         <div className="row between">
           <button className="link" onClick={() => (step === 1 ? onExit() : go(step - 1))}>
             ← Back
