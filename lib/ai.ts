@@ -6,12 +6,12 @@ import { ApiError, GoogleGenAI, type Content } from "@google/genai";
  * Server-side AI helper shared by the AI routes. Keys live only on the server.
  *
  * Provider is picked from environment variables:
- *   GEMINI_API_KEY     → Google Gemini (has a free tier)   [model: GEMINI_MODEL, default gemini-flash-latest]
+ *   GEMINI_API_KEY     → Google Gemini (has a free tier)   [model: GEMINI_MODEL, default gemini-3.5-flash]
  *   ANTHROPIC_API_KEY  → Anthropic Claude (paid)           [model: claude-opus-5-5]
  * If both are set, Gemini is used unless AI_PROVIDER=anthropic.
  */
 const CLAUDE_MODEL = "claude-opus-5-5";
-const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-flash-latest";
+const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-3.5-flash";
 
 type Provider = "gemini" | "anthropic";
 function provider(): Provider | null {
