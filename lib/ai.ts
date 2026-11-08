@@ -12,6 +12,7 @@ import { ApiError, GoogleGenAI, type Content } from "@google/genai";
  */
 const CLAUDE_MODEL = "claude-opus-5-5";
 const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-3.5-flash";
+const GEMINI_FALLBACK_MODEL = process.env.GEMINI_FALLBACK_MODEL || "gemini-2.5-flash";
 
 type Provider = "gemini" | "anthropic";
 function provider(): Provider | null {
@@ -53,33 +54,47 @@ async function askGemini(system: string, messages: Message[], maxTokens = 2000):
     role: m.role === "assistant" ? "model" : "user",
     parts: m.parts.map((part) => ("text" in part ? { text: part.text } : { inlineData: { mimeType: part.image.mediaType, data: part.image.data } })),
   }));
-  try {
-    const res = await gemini.models.generateContent({
-      model: GEMINI_MODEL,
-      contents,
-      config: { systemInstruction: system, maxOutputTokens: maxTokens },
-    });
-    const text = res.text?.trim();
-    if (text) return { ok: true, text };
-    return { ok: false, status: 422, error: "Sorry, I couldn't answer that one. Please try rephrasing, or check with a doctor." };
-  } catch (error) {
-    console.error("[ai] Gemini error:", error);
-    // check the status code directly (more robust than instanceof across bundles)
-    const status = error instanceof ApiError ? error.status : Number((error as { status?: number })?.status) || 0;
-    if (status) {
-      if (status === 429) return { ok: false, status: 429, error: "The free AI limit was reached for now. Please try again in a minute." };
-      if (status === 400 || status === 401 || status === 403 || status === 404)
-        return { ok: false, status: 503, error: "AI key or model setting is invalid. Check GEMINI_API_KEY / GEMINI_MODEL." };
-      return { ok: false, status: 502, error: "The AI service had a problem. Please try again." };
+  // If the main model is busy (503/500/429), retry once, then fall back to a second free model.
+  const models = [...new Set([GEMINI_MODEL, GEMINI_FALLBACK_MODEL])];
+  const attempts = models.flatMap((m) => [m, m]);
+  let lastError: unknown = null;
+  for (const model of attempts) {
+    try {
+      const res = await gemini.models.generateContent({
+        model,
+        contents,
+        config: { systemInstruction: system, maxOutputTokens: maxTokens },
+      });
+      const text = res.text?.trim();
+      if (text) return { ok: true, text };
+      return { ok: false, status: 422, error: "Sorry, I couldn't answer that one. Please try rephrasing, or check with a doctor." };
+    } catch (error) {
+      lastError = error;
+      const status = Number((error as { status?: number })?.status) || 0;
+      if (![429, 500, 503].includes(status)) break; // not a temporary problem: stop retrying
+      await new Promise((r) => setTimeout(r, 700));
     }
-    // On a developer's machine, show the underlying reason to make network problems easy to diagnose.
-    const e = error as { name?: string; message?: string; cause?: { code?: string; message?: string } };
-    const detail =
-      process.env.NODE_ENV !== "production"
-        ? ` [debug: ${e?.name ?? "Error"}: ${String(e?.message ?? "").slice(0, 160)}${e?.cause ? ` | cause: ${e.cause.code ?? ""} ${String(e.cause.message ?? "").slice(0, 120)}` : ""}]`
-        : "";
-    return { ok: false, status: 502, error: `Couldn't reach the AI service. Check your internet and try again.${detail}` };
   }
+  return geminiError(lastError);
+}
+
+function geminiError(error: unknown): AIResult {
+  console.error("[ai] Gemini error:", error);
+  // check the status code directly (more robust than instanceof across bundles)
+  const status = error instanceof ApiError ? error.status : Number((error as { status?: number })?.status) || 0;
+  if (status) {
+    if (status === 429) return { ok: false, status: 429, error: "The free AI limit was reached for now. Please try again in a minute." };
+    if (status === 400 || status === 401 || status === 403 || status === 404)
+      return { ok: false, status: 503, error: "AI key or model setting is invalid. Check GEMINI_API_KEY / GEMINI_MODEL." };
+    return { ok: false, status: 502, error: "The AI service had a problem. Please try again." };
+  }
+  // On a developer's machine, show the underlying reason to make network problems easy to diagnose.
+  const e = error as { name?: string; message?: string; cause?: { code?: string; message?: string } };
+  const detail =
+    process.env.NODE_ENV !== "production"
+      ? ` [debug: ${e?.name ?? "Error"}: ${String(e?.message ?? "").slice(0, 160)}${e?.cause ? ` | cause: ${e.cause.code ?? ""} ${String(e.cause.message ?? "").slice(0, 120)}` : ""}]`
+      : "";
+  return { ok: false, status: 502, error: `Couldn't reach the AI service. Check your internet and try again.${detail}` };
 }
 
 /* ------------------------------ Claude ------------------------------ */
