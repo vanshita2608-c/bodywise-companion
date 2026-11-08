@@ -1,42 +1,37 @@
 /* ------------------------------------------------------------------
-   Theme: warm coral → violet gradient on a soft blush background.
-------------------------------------------------------------------- */
-/* ------------------------------------------------------------------
-   Theme: "Organic & Soulful" wellness palette
-   #627261 deep sage · #A9B49D soft sage · #AD9065 warm gold
-   #CEB583 honey dust · #D8B6A9 blush pink · #F4E9DC creamy ivory
+   Theme: warm rose on soft cream (original palette)
+   #B4536A rose · #FBF7F3 cream · #2A1F1D ink · dark mode in warm brown
 ------------------------------------------------------------------- */
 :root{
-  --bg:#F4E9DC; --surface:#FFFBF5; --surface-2:#EFE3D3; --ink:#2F3A2E; --ink-2:#6B6F60; --line:#E4D6C3;
-  --brand:#627261; --brand-2:#AD9065; --brand-ink:#FFFFFF; --brand-soft:#E6E9DD;
-  --sage:#A9B49D; --gold:#AD9065; --honey:#CEB583; --blush:#D8B6A9;
-  --grad:linear-gradient(135deg,#55654F 0%,#627261 45%,#8A8A62 100%);
-  --grad-soft:linear-gradient(135deg,#EEF0E6 0%,#F6E6DE 100%);
-  --good:#4E7B50; --good-soft:#E3ECDD; --warn:#9C7234; --warn-soft:#F5E8CF; --bad:#A9564A; --bad-soft:#F5E0DA;
-  --band:#DCE1D2; --blob-a:#E7CFC5; --blob-b:#C9D1BD; --blob-c:#E8D6AE;
-  --shadow:0 1px 2px rgba(47,58,46,.05),0 10px 30px -12px rgba(98,114,97,.25);
-  --shadow-btn:0 10px 22px -10px rgba(98,114,97,.65);
-  --r:20px;
+  --bg:#FBF7F3; --surface:#FFFFFF; --surface-2:#F4EDE6; --ink:#2A1F1D; --ink-2:#6B5B56; --line:#E8DDD4;
+  --brand:#B4536A; --brand-2:#8E3F55; --brand-ink:#FFFFFF; --brand-soft:#F6E3E7;
+  --grad:linear-gradient(135deg,#C2667C 0%,#B4536A 50%,#9A4459 100%);
+  --grad-soft:linear-gradient(135deg,#F6E3E7 0%,#F4EDE6 100%);
+  --good:#2F7D5B; --good-soft:#E2F2EA; --warn:#A8621B; --warn-soft:#FBEBD8; --bad:#B23B3B; --bad-soft:#F8E1E1;
+  --band:#E9D7DC; --blob-a:#F3DCE1; --blob-b:#EFE2D6; --blob-c:#F6E6D8;
+  --shadow:0 1px 2px rgba(42,31,29,.06),0 6px 24px rgba(42,31,29,.06);
+  --shadow-btn:0 10px 22px -10px rgba(180,83,106,.6);
+  --r:16px;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#151A15; --surface:#1E241D; --surface-2:#283027; --ink:#F4E9DC; --ink-2:#B9B6A6; --line:#333C31;
-    --brand:#A9B49D; --brand-2:#CEB583; --brand-ink:#1A2019; --brand-soft:#2C3529;
-    --grad:linear-gradient(135deg,#A9B49D 0%,#B9B48E 50%,#CEB583 100%);
-    --grad-soft:linear-gradient(135deg,#222A21 0%,#2D2722 100%);
-    --good:#9CC495; --good-soft:#203126; --warn:#D9B46F; --warn-soft:#352C1B; --bad:#E0A094; --bad-soft:#3A2522;
-    --band:#3A4535; --blob-a:#3D2D2A; --blob-b:#2A3527; --blob-c:#3A321F;
-    --shadow:0 10px 30px -12px rgba(0,0,0,.6); --shadow-btn:0 10px 22px -10px rgba(169,180,157,.35);
+    --bg:#17120F; --surface:#221B18; --surface-2:#2C2420; --ink:#F3EAE4; --ink-2:#B9A9A2; --line:#3A302B;
+    --brand:#E08AA0; --brand-2:#C97A8E; --brand-ink:#1E1412; --brand-soft:#3A2329;
+    --grad:linear-gradient(135deg,#E8A0B2 0%,#E08AA0 50%,#C97A8E 100%);
+    --grad-soft:linear-gradient(135deg,#2E2024 0%,#2A221E 100%);
+    --good:#6CC79C; --good-soft:#1E3329; --warn:#E3A35E; --warn-soft:#3A2A18; --bad:#EC8A8A; --bad-soft:#3A1F1F;
+    --band:#4A2E35; --blob-a:#3A2329; --blob-b:#2E241F; --blob-c:#33261C;
+    --shadow:none; --shadow-btn:0 10px 22px -10px rgba(224,138,160,.35);
   }
 }
 :root[data-theme="dark"]{
-  --bg:#151A15; --surface:#1E241D; --surface-2:#283027; --ink:#F4E9DC; --ink-2:#B9B6A6; --line:#333C31;
-  --brand:#A9B49D; --brand-2:#CEB583; --brand-ink:#1A2019; --brand-soft:#2C3529;
-  --grad:linear-gradient(135deg,#A9B49D 0%,#B9B48E 50%,#CEB583 100%);
-  --grad-soft:linear-gradient(135deg,#222A21 0%,#2D2722 100%);
-  --good:#9CC495; --good-soft:#203126; --warn:#D9B46F; --warn-soft:#352C1B; --bad:#E0A094; --bad-soft:#3A2522;
-  --band:#3A4535; --blob-a:#3D2D2A; --blob-b:#2A3527; --blob-c:#3A321F;
-  --shadow:0 10px 30px -12px rgba(0,0,0,.6); --shadow-btn:0 10px 22px -10px rgba(169,180,157,.35);
+  --bg:#17120F; --surface:#221B18; --surface-2:#2C2420; --ink:#F3EAE4; --ink-2:#B9A9A2; --line:#3A302B;
+  --brand:#E08AA0; --brand-2:#C97A8E; --brand-ink:#1E1412; --brand-soft:#3A2329;
+  --grad:linear-gradient(135deg,#E8A0B2 0%,#E08AA0 50%,#C97A8E 100%);
+  --grad-soft:linear-gradient(135deg,#2E2024 0%,#2A221E 100%);
+  --good:#6CC79C; --good-soft:#1E3329; --warn:#E3A35E; --warn-soft:#3A2A18; --bad:#EC8A8A; --bad-soft:#3A1F1F;
+  --band:#4A2E35; --blob-a:#3A2329; --blob-b:#2E241F; --blob-c:#33261C;
+  --shadow:none; --shadow-btn:0 10px 22px -10px rgba(224,138,160,.35);
 }
 
 *{box-sizing:border-box}
@@ -206,7 +201,7 @@ p{margin:0}
 .banner{background:var(--grad);color:var(--brand-ink);border-radius:16px;padding:10px 12px 10px 14px;font-size:13px;font-weight:600;display:flex;justify-content:space-between;align-items:center;gap:8px;box-shadow:var(--shadow-btn)}
 .banner .btn{background:var(--surface);color:var(--brand);box-shadow:none;white-space:nowrap;flex:none}
 .foot{margin-top:28px;font-size:12px;color:var(--ink-2);text-align:center;line-height:1.5}
-.sheet-bg{position:fixed;inset:0;background:rgba(30,36,29,.45);backdrop-filter:blur(4px);z-index:10;display:flex;align-items:flex-end;justify-content:center;animation:fadeIn .2s both;opacity:0}
+.sheet-bg{position:fixed;inset:0;background:rgba(42,31,29,.45);backdrop-filter:blur(4px);z-index:10;display:flex;align-items:flex-end;justify-content:center;animation:fadeIn .2s both;opacity:0}
 .sheet{background:var(--bg);width:100%;max-width:560px;max-height:92vh;overflow:auto;border-radius:26px 26px 0 0;padding:22px 16px 28px;animation:slideUp .35s cubic-bezier(.2,.7,.2,1) both}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:none}}
 .marker-row+.marker-row{margin-top:16px}
@@ -232,7 +227,8 @@ p{margin:0}
 .dots i:nth-child(2){animation-delay:.15s}.dots i:nth-child(3){animation-delay:.3s}
 @keyframes bounce{0%,80%,100%{transform:scale(.5);opacity:.4}40%{transform:scale(1);opacity:1}}
 .ai-row{display:flex;flex-wrap:wrap;gap:8px}
-.ai-row span{font-size:12px;font-weight:600;padding:6px 11px;border-radius:999px;background:var(--surface);border:1px solid var(--line);color:var(--ink)}
+.ai-row button{font:600 12px var(--font-sans),sans-serif;padding:7px 12px;border-radius:999px;background:var(--surface);border:1px solid var(--line);color:var(--ink);cursor:pointer;transition:transform .15s,border-color .15s}
+.ai-row button:hover{border-color:var(--brand);transform:translateY(-1px)}
 
 /* forecast */
 .fc-main{display:flex;justify-content:space-between;gap:12px;align-items:flex-end}

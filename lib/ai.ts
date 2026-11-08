@@ -63,13 +63,22 @@ async function askGemini(system: string, messages: Message[], maxTokens = 2000):
     if (text) return { ok: true, text };
     return { ok: false, status: 422, error: "Sorry, I couldn't answer that one. Please try rephrasing, or check with a doctor." };
   } catch (error) {
-    if (error instanceof ApiError) {
-      if (error.status === 429) return { ok: false, status: 429, error: "The free AI limit was reached for now. Please try again in a minute." };
-      if (error.status === 400 || error.status === 401 || error.status === 403)
+    console.error("[ai] Gemini error:", error);
+    // check the status code directly (more robust than instanceof across bundles)
+    const status = error instanceof ApiError ? error.status : Number((error as { status?: number })?.status) || 0;
+    if (status) {
+      if (status === 429) return { ok: false, status: 429, error: "The free AI limit was reached for now. Please try again in a minute." };
+      if (status === 400 || status === 401 || status === 403 || status === 404)
         return { ok: false, status: 503, error: "AI key or model setting is invalid. Check GEMINI_API_KEY / GEMINI_MODEL." };
       return { ok: false, status: 502, error: "The AI service had a problem. Please try again." };
     }
-    return { ok: false, status: 500, error: "Something went wrong. Please try again." };
+    // On a developer's machine, show the underlying reason to make network problems easy to diagnose.
+    const e = error as { name?: string; message?: string; cause?: { code?: string; message?: string } };
+    const detail =
+      process.env.NODE_ENV !== "production"
+        ? ` [debug: ${e?.name ?? "Error"}: ${String(e?.message ?? "").slice(0, 160)}${e?.cause ? ` | cause: ${e.cause.code ?? ""} ${String(e.cause.message ?? "").slice(0, 120)}` : ""}]`
+        : "";
+    return { ok: false, status: 502, error: `Couldn't reach the AI service. Check your internet and try again.${detail}` };
   }
 }
 
@@ -106,6 +115,7 @@ async function askClaude(system: string, messages: Message[], maxTokens = 4000):
       .trim();
     return text ? { ok: true, text } : { ok: false, status: 502, error: "The AI didn't return an answer. Please try again." };
   } catch (error) {
+    console.error("[ai] Claude error:", error);
     if (error instanceof Anthropic.AuthenticationError) return { ok: false, status: 503, error: "AI key is invalid. Check ANTHROPIC_API_KEY." };
     if (error instanceof Anthropic.RateLimitError) return { ok: false, status: 429, error: "Too many requests right now. Try again in a minute." };
     if (error instanceof Anthropic.BadRequestError) return { ok: false, status: 400, error: "That request couldn't be processed." };

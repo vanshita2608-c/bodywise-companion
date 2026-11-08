@@ -59,10 +59,11 @@ export default function App() {
       <div className="wrap">
         <Landing
           onStart={() => setMode("onboarding")}
-          onDemo={() => {
+          onDemo={(t) => {
             update(makeDemo());
-            setTab("today");
+            setTab(t ?? "today");
             setMode("app");
+            window.scrollTo(0, 0);
           }}
         />
       </div>
