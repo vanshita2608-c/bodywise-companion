@@ -10,19 +10,25 @@ Built for the Mosaic Fellowship Builder Challenge (Part 2).
 3. **See if it's working:** a baseline rating, a 1-tap daily log, and a 30-second weekly check-in. Progress is charted against a typical range and turned into a plain verdict: *too early / working / slower than typical (and why) / mixed signal / not the right fit*.
 4. **Attribution:** customers log other changes (new shampoo, diet, stress) so improvements aren't confounded.
 
-Single static file (`index.html`), no build step, no backend. Data stays in the browser (localStorage). No customer personal data is used in the app.
+## Tech
+Next.js 15 (App Router) + TypeScript + React 19, exported as a static site. No backend; data stays in the browser (localStorage). No customer personal data is used in the app.
 
-## Run locally
-Double-click `index.html`, or:
-```bash
-cd ~/bodywise-companion
-python3 -m http.server 8000   # then open http://localhost:8000
+```
+app/            layout, page, global styles
+components/     Landing, Onboarding, Today / Progress / Guide screens, CheckinSheet, ProgressChart
+lib/products.ts usage steps, key step, timelines per product
+lib/logic.ts    progress maths + the "is it working?" verdict
+lib/storage.ts  local storage + 5-week demo journey
 ```
 
-## Deploy (pick one, ~2 minutes)
-- **Netlify Drop (easiest):** go to https://app.netlify.com/drop, drag the `bodywise-companion` folder in, and copy the URL. Sign in so the link doesn't expire.
-- **Vercel:** `npx vercel` inside the folder and accept the defaults → `npx vercel --prod`.
-- **GitHub Pages:** push the folder to a public repo → Settings → Pages → Deploy from branch `main` / root.
+## Run locally
+```bash
+npm install
+npm run dev      # open http://localhost:3000
+```
+
+## Deploy
+Import the GitHub repo on https://vercel.com/new and click Deploy. Every `git push` redeploys automatically.
 
 Tip for reviewers: tap **"See a 5-week example"** on the home screen to see a filled-in journey instantly.
 
