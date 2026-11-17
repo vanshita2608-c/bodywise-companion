@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { dayKey, weekNo } from "@/lib/logic";
+import { dayKey, productOf, weekNo } from "@/lib/logic";
 import { loadJourney, makeDemo, saveJourney } from "@/lib/storage";
 import type { Journey, Scores, Tab } from "@/lib/types";
 import CheckinSheet from "./CheckinSheet";
@@ -56,7 +56,7 @@ export default function App() {
 
   if (mode === "landing")
     return (
-      <div className="wrap">
+      <>
         <Landing
           onStart={() => setMode("onboarding")}
           onDemo={(t) => {
@@ -66,12 +66,12 @@ export default function App() {
             window.scrollTo(0, 0);
           }}
         />
-      </div>
+      </>
     );
 
   if (mode === "onboarding")
     return (
-      <div className="wrap">
+      <div className="wrap onb-wrap">
         <Onboarding
           onExit={() => setMode("landing")}
           onDone={(j) => {
@@ -107,43 +107,76 @@ export default function App() {
     switchTab("progress");
   };
 
+  const p = productOf(journey);
+  const navButtons = TABS.map((t) => (
+    <button key={t.id} className={tab === t.id ? "on" : ""} aria-current={tab === t.id ? "page" : undefined} onClick={() => switchTab(t.id)}>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} aria-hidden>
+        {t.icon}
+      </svg>
+      <span>{t.label}</span>
+    </button>
+  ));
+
   return (
     <>
-      <div className="wrap">
-        <Header inApp onReset={reset} />
-        {journey.demo && (
-          <div className="banner" style={{ marginBottom: 20 }}>
-            <span>You&apos;re viewing a sample 5-week journey.</span>
-            <button className="btn small" onClick={reset}>
-              Start my own
+      <div className="shell">
+        {/* Desktop sidebar */}
+        <aside className="sidebar" aria-label="App navigation">
+          <div className="logo">
+            <span className="dot">✦</span>Is It Working?
+          </div>
+          <div className="side-product">
+            <span className="picon">{p.icon}</span>
+            <div>
+              <b>{p.short}</b>
+              <span className="tiny muted">
+                Week {weekNo(journey) + 1} · {journey.concern}
+              </span>
+            </div>
+          </div>
+          <nav className="side-nav">{navButtons}</nav>
+          <div className="side-foot">
+            <button className="btn ghost small" onClick={() => setCheckinOpen(true)}>
+              + Log a check-in
+            </button>
+            <button className="link" onClick={reset}>
+              {journey.demo ? "Exit demo" : "Start over"}
             </button>
           </div>
-        )}
-        {tab === "today" && (
-          <Today
-            journey={journey}
-            onToggleUsed={toggleUsed}
-            onToggleKey={toggleKey}
-            onCheckin={() => setCheckinOpen(true)}
-            onSeeProgress={() => switchTab("progress")}
-          />
-        )}
-        {tab === "progress" && <Progress journey={journey} onCheckin={() => setCheckinOpen(true)} />}
-        {tab === "ask" && <AskChat journey={journey} />}
-        {tab === "guide" && <Guide journey={journey} />}
+        </aside>
+
+        <main className="main">
+          <div className="main-in">
+            <div className="mobile-only">
+              <Header inApp onReset={reset} />
+            </div>
+            {journey.demo && (
+              <div className="banner" style={{ marginBottom: 20 }}>
+                <span>You&apos;re viewing a sample 5-week journey.</span>
+                <button className="btn small" onClick={reset}>
+                  Start my own
+                </button>
+              </div>
+            )}
+            {tab === "today" && (
+              <Today
+                journey={journey}
+                onToggleUsed={toggleUsed}
+                onToggleKey={toggleKey}
+                onCheckin={() => setCheckinOpen(true)}
+                onSeeProgress={() => switchTab("progress")}
+              />
+            )}
+            {tab === "progress" && <Progress journey={journey} onCheckin={() => setCheckinOpen(true)} />}
+            {tab === "ask" && <AskChat journey={journey} />}
+            {tab === "guide" && <Guide journey={journey} />}
+          </div>
+        </main>
       </div>
 
+      {/* Mobile bottom tabs */}
       <nav className="tabs" aria-label="Main">
-        <div className="in">
-          {TABS.map((t) => (
-            <button key={t.id} className={tab === t.id ? "on" : ""} aria-current={tab === t.id ? "page" : undefined} onClick={() => switchTab(t.id)}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} aria-hidden>
-                {t.icon}
-              </svg>
-              {t.label}
-            </button>
-          ))}
-        </div>
+        <div className="in">{navButtons}</div>
       </nav>
 
       {checkinOpen && <CheckinSheet journey={journey} onSave={saveCheckin} onClose={() => setCheckinOpen(false)} />}

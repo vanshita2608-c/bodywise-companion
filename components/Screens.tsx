@@ -56,7 +56,7 @@ export function Today({
   });
 
   return (
-    <div className="stack-lg screen">
+    <div className="stack-lg screen cols">
       <div className="stack">
         <span className="chip">
           {p.icon} {p.short} · Day {d + 1} · Week {w + 1}
@@ -132,7 +132,7 @@ export function Progress({ journey, onCheckin }: { journey: Journey; onCheckin: 
   const pct = (v: number | null) => (v === null ? "–" : `${Math.round(v * 100)}%`);
 
   return (
-    <div className="stack-lg screen">
+    <div className="stack-lg screen cols">
       <div className="stack">
         <span className="chip">
           {p.icon} {p.short}
@@ -246,7 +246,7 @@ export function Progress({ journey, onCheckin }: { journey: Journey; onCheckin: 
 export function Guide({ journey }: { journey: Journey }) {
   const p = productOf(journey);
   return (
-    <div className="stack-lg screen">
+    <div className="stack-lg screen cols">
       <div className="stack">
         <span className="chip">
           {p.icon} {p.short}
